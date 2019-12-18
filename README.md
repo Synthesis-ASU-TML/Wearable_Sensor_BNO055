@@ -26,12 +26,13 @@ The following libraries are necessary to download and install in the Arduino Lib
   	- DST_PORT : The network port to use when sending data to the destination device
   	- hostIP : The IP Address of the destination device
   	- SENSOR_SAMPLE_RATE : The rate (in Hz) that the program will attempt to update sensor data (1 - 100)
-
-#### Upcoming
 	- OSC_ADDR : Set the string used as the osc address when sent to Max (Must have leading '/')
 	
 ### In Max 7 / 8
 	- Open the "Wearable_Sensor_Base" Patch
 	- Set the port in the udpreceive object to DST_PORT
 	- Make sure the route has an argument of "/sensor1" (In the future, make sure that it matches OSC_ADDR)
+	
+#### TODO
+	- Implement safety check on OSC address string
 	

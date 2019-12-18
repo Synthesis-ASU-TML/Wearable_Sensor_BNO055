@@ -52,12 +52,14 @@ int receivedValues[NUMBER_OF_INCOMING_VALUES] = {0};  // array for storing incom
 
 uint16_t BNO055_SAMPLERATE_DELAY_MS = 1000 / ((SENSOR_SAMPLE_RATE <= 0) ? 1 : ((SENSOR_SAMPLE_RATE > 100) ? 100 : SENSOR_SAMPLE_RATE));
 
-//-----CONSTRUCTORS-----
-
+//-----CONSTRUCTORS FOR WIFI AND SENSORS----- 
 Adafruit_WINC1500 WiFi(WINC_CS, WINC_IRQ, WINC_RST);
 Adafruit_WINC1500UDP Udp;
 Adafruit_BNO055 bno = Adafruit_BNO055(42, 0x28);
 
+//-----VARIABLES FOR OSC ADDRESS----
+uint8_t addr_len = strlen(OSC_ADDR);
+uint8_t addr_pad = 0; 
 
 void setup() {
 
@@ -81,6 +83,7 @@ void setup() {
     delay(1000);
   }
 
+  addr_pad = 4 - (addr_len % 4);
 
   Udp.begin(RETURN_PORT); //listen to port
   delay(1000); //let things settle
@@ -112,15 +115,17 @@ void loop() {
   ay = (float)accelData.acceleration.y;
   az = (float)accelData.acceleration.z;
   
+
+  const int packet_len = addr_len + addr_pad + 52;
   
-  uint8_t data[60] = {0};
+  uint8_t data[packet_len] = {0};
 
   uint8_t* temp = data;
 
-  char* taddr = "/sensor1";
+  //char* taddr = "/sensor1";
 
-  memcpy(temp, taddr, 8);
-  temp += 12;
+  memcpy(temp, OSC_ADDR, addr_len);
+  temp += addr_len + addr_pad;
   *temp = ',';
   temp++;
   *temp = 'f';
