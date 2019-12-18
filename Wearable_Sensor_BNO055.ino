@@ -89,11 +89,6 @@ void setup() {
 
 void loop() {
 
-  Serial.println(DST_PORT);
-  Serial.println(myhostIP);
-  Serial.println(WIFI_SSID);
-  Serial.println(WIFI_PWD);
-
   //declare sensor data containers
   sensors_event_t orientData , velData , accelData;
 
@@ -146,18 +141,7 @@ void loop() {
   temp++;
   *temp = 'f';
   temp += 3;
-/*
-  char* content = "hello";
-  int oxint = (int)(ox * 100);
-  int* data = &oxint;
-  *temp = (oxint >> 24) & 0xFF;
-  temp++;
-  *temp = (oxint >> 16) & 0xFF;
-  temp++;
-  *temp = (oxint >> 8) & 0xFF;
-  temp++;
-  *temp = oxint & 0xFF;
-*/
+
   char fdata[4];
 
   memcpy(&fdata, &ox, 4);
@@ -260,17 +244,6 @@ void loop() {
 
 /*
 
-//------send sensor data------
-char packetOut[128] = {0}; //init to NULL
-
- 
-  Udp.beginPacket(hostIP, HOST_PORT);
-  Udp.write(packetOut, 128);
-  Udp.endPacket();
-  Udp.flush();
-
-  delay(5);
-
 //------read incoming packets------
   int packetSize = Udp.parsePacket();
   char *string;
@@ -291,24 +264,4 @@ char packetOut[128] = {0}; //init to NULL
   
 }
 
-void printEvent(imu::Vector<3> vec, String type) {
-  Serial.println();
-  Serial.print(type);
-  double x = -1000000, y = -1000000 , z = -1000000; //dumb values, easy to spot problem
-
-  if(type == "Orientation") {
-    vec.toDegrees();
-  }
-  
-  x = vec.x();
-  y = vec.y();
-  z = vec.z();
-
-  Serial.print(": x= ");
-  Serial.print(x);
-  Serial.print(" | y= ");
-  Serial.print(y);
-  Serial.print(" | z= ");
-  Serial.println(z);
-}
 
