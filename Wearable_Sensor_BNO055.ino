@@ -100,32 +100,42 @@ void loop() {
   bno.getEvent(&velData, Adafruit_BNO055::VECTOR_GYROSCOPE);
   bno.getEvent(&accelData, Adafruit_BNO055::VECTOR_ACCELEROMETER);
 
-  //break data out into floats
+  //break data out into floats, default values way out of range to make spotting bad output easy
   float ox = -10000, oy = -10000, oz = -10000, gx = -10000, gy = -10000, gz = -10000, ax = -10000, ay = -10000, az = -10000;
 
+  //all data using single-precision floats since the sensor API only reports to the nearest hundreth
+
+  //get orientation data
   ox = (float)orientData.orientation.x;
   oy = (float)orientData.orientation.y;
   oz = (float)orientData.orientation.z;
 
+  //get gyroscope data
   gx = (float)velData.gyro.x;
   gy = (float)velData.gyro.y;
   gz = (float)velData.gyro.z;  
 
+  //get accelerometer data
   ax = (float)accelData.acceleration.x;
   ay = (float)accelData.acceleration.y;
   az = (float)accelData.acceleration.z;
   
-
+  //work out size of packet (Length of address string + padding to nearest multiple of 4 + known size of rest of data)
   const int packet_len = addr_len + addr_pad + 52;
-  
+
+  //create an array to hold our data, initialize to nulls
   uint8_t data[packet_len] = {0};
 
+  //temporary pointer used to traverse array
   uint8_t* temp = data;
 
-  //char* taddr = "/sensor1";
-
+  //copy in address string
   memcpy(temp, OSC_ADDR, addr_len);
+
+  //move to start of type description string
   temp += addr_len + addr_pad;
+
+  //input string for 9 floats
   *temp = ',';
   temp++;
   *temp = 'f';
@@ -145,11 +155,17 @@ void loop() {
   *temp = 'f';
   temp++;
   *temp = 'f';
+
+  //move to start of argument string
   temp += 3;
 
+  //temporary array for holding data
   char fdata[4];
 
+  //copy contents of float into temp array
   memcpy(&fdata, &ox, 4);
+
+  //read bytes in reverse order (brute force endianess swap)
   *temp = fdata[3];
   temp++;
   *temp = fdata[2];
@@ -159,6 +175,7 @@ void loop() {
   *temp = fdata[0];
   temp++;
 
+  //repeat above 8 more times to read in each value
   memcpy(&fdata, &oy, 4);
   *temp = fdata[3];
   temp++;
@@ -237,18 +254,22 @@ void loop() {
   *temp = fdata[1];
   temp++;
   *temp = fdata[0];
-  temp++;
  
-  
+
+  //create a packet to contain our OSC data
   Udp.beginPacket(hostIP, DST_PORT);
-  Udp.write(data, 60);
+  //write OSC data into packet
+  Udp.write(data, packet_len);
+
+  //finish up sending and clearing registers before next pass
   Udp.endPacket();
   Udp.flush();
-  
+
+  //wait a few ticks before sampling data and sending again
   delay(BNO055_SAMPLERATE_DELAY_MS);
 
 /*
-
+  //we may use this code again in the future, leaving for now.
 //------read incoming packets------
   int packetSize = Udp.parsePacket();
   char *string;
