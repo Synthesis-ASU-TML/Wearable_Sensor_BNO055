@@ -17,6 +17,22 @@ The following libraries are necessary to download and install in the Arduino Lib
  In order to program the Adafruit Feather M0 from the Arduino IDE follow these instructions from the Adafruit website:
  - https://learn.adafruit.com/adafruit-feather-m0-wifi-atwinc1500/setup
  
+ Alternatively follow these instructions:
+
+* Open the Arduino preferences panel. 
+	* File > Preferences on Windows
+	* Arduino > Preferences on Mac
+* In the box for Additional Board Manager URLs paste the following link: 
+	* https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+* Open Tools > Boards > Boards Manager
+	* Install the Arduino SAMD boards
+	* Install the Adafruit SAMD boards
+		* Type adafruit into the search bar to easily find the option
+* Once all of the board libraries are installed, retart the Arduino application
+* In the boards menu, (Tools > Boards) select the Adafruit Feather M0
+* You are now ready to program the wearable units.
+
+ 
  ## Configuration
  
  ### In Arduino
