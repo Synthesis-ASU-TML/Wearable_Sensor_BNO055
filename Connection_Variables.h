@@ -13,6 +13,9 @@ IPAddress hostIP(10, 0, 1, 2);
 //Info about accepting connections
 #define RETURN_PORT 9000
 
+//Use the sensor sample rate (1 = true, 0 = false)
+#define THROTTLE 1 
+
 //Sensor Sample Rate (1hz - 100hz)
 #define SENSOR_SAMPLE_RATE 10
 

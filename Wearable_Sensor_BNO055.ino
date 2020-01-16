@@ -265,8 +265,10 @@ void loop() {
   Udp.endPacket();
   Udp.flush();
 
-  //wait a few ticks before sampling data and sending again
-  delay(BNO055_SAMPLERATE_DELAY_MS);
+  if(THROTTLE) {
+    //wait a few ticks before sampling data and sending again
+    delay(BNO055_SAMPLERATE_DELAY_MS);
+  }
 
 /*
   //we may use this code again in the future, leaving for now.

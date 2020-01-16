@@ -41,13 +41,14 @@ The following libraries are necessary to download and install in the Arduino Lib
   	- WIFI_PWD : The password to the wireless network
   	- DST_PORT : The network port to use when sending data to the destination device
   	- hostIP : The IP Address of the destination device
+  	- THROTTLE : Enables or Disables Sensor Sample Rate (0 : Disabled, 1 : Enabled)
   	- SENSOR_SAMPLE_RATE : The rate (in Hz) that the program will attempt to update sensor data (1 - 100)
 	- OSC_ADDR : Set the string used as the osc address when sent to Max (Must have leading '/')
 	
 ### In Max 7 / 8
 	- Open the "Wearable_Sensor_Base" Patch
 	- Set the port in the udpreceive object to DST_PORT
-	- Make sure the route has an argument of "/sensor1" (In the future, make sure that it matches OSC_ADDR)
+	- Make sure the route has an argument that matches OSC_ADDR
 	
 #### TODO
 	- Implement safety check on OSC address string
